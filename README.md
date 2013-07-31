@@ -3,6 +3,8 @@ Leaflet.groupedlayercontrol
 
 Leaflet layer control with support for grouping overlays together.
 
+[Demo](http://bl.ocks.org/ismyrnow/6123517)
+
 ## Usage
 Add groupings to your overlay layers object, and swap out the default layer
 control with the new one.
@@ -23,10 +25,7 @@ L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
 
 ![preview](preview.png)
 
-For an example of the code above, see the [basic example]
-(example/basic.html).
-
-The example shows some basic CSS styling of the new control elements.
+The [example](example/basic.html) shows some basic CSS styling of the new control elements.
 
 ## Note
 
