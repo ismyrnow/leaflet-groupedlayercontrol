@@ -59,6 +59,7 @@ L.Control.GroupedLayers = L.Control.extend({
   removeLayer: function (layer) {
     var id = L.Util.stamp(layer);
     delete this._layers[id];
+    this._domGroups.length=0;
     this._update();
     return this;
   },
