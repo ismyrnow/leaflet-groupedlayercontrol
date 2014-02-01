@@ -1,87 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Basic example</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
-	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.ie.css" /><![endif]-->
-	
-	<style type="text/css">
-		.leaflet-control-layers-group-name {
-		  font-weight: bold;
-		  margin-bottom: .2em;
-		  display: block;
-		}
+  <title>Basic example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
+  <!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.ie.css" /><![endif]-->
+  
+  <style type="text/css">
+    .leaflet-control-layers-group-name {
+      font-weight: bold;
+      margin-bottom: .2em;
+      display: block;
+    }
 
-		.leaflet-control-layers-group {
-		  margin-bottom: .5em;
-		}
+    .leaflet-control-layers-group {
+      margin-bottom: .5em;
+    }
 
-		.leaflet-control-layers-group label {
-		  padding-left: .5em;
-		}
-	</style>
+    .leaflet-control-layers-group label {
+      padding-left: .5em;
+    }
+  </style>
 
-	<script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
-	
-	<script src="../src/leaflet.groupedlayercontrol.js"></script>
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
+  <script src="../src/leaflet.groupedlayercontrol.js"></script>
 </head>
 <body>
 
-	<div id="map" style="position:absolute;width:80%;height:50%;"></div>
+  <div id="map" style="position:absolute;width:80%;height:50%;"></div>
 
-	<script type="text/javascript">
+  <script type="text/javascript">
 
-		(function() {
+    var cities = new L.LayerGroup();
 
-			var cities = new L.LayerGroup();
+    L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.').addTo(cities),
+    L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.').addTo(cities),
+    L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.').addTo(cities),
+    L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.').addTo(cities);
 
-		    L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.').addTo(cities),
-			L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.').addTo(cities),
-			L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.').addTo(cities),
-			L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.').addTo(cities);
+    var restaurants = new L.LayerGroup();
 
-			var restaurants = new L.LayerGroup();
-
-		    L.marker([39.69, -104.85]).bindPopup('A fake restaurant').addTo(restaurants);
-			L.marker([39.69, -105.12]).bindPopup('A fake restaurant').addTo(restaurants);
+    L.marker([39.69, -104.85]).bindPopup('A fake restaurant').addTo(restaurants);
+    L.marker([39.69, -105.12]).bindPopup('A fake restaurant').addTo(restaurants);
 
 
-		    var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
-				cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
+    var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade',
+    cmUrl = 'http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/{styleId}/256/{z}/{x}/{y}.png';
 
-		    var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr}),
-			    midnight  = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr}),
-			    motorways = L.tileLayer(cmUrl, {styleId: 46561, attribution: cmAttr});
+    var minimal   = L.tileLayer(cmUrl, {styleId: 22677, attribution: cmAttr}),
+      midnight  = L.tileLayer(cmUrl, {styleId: 999,   attribution: cmAttr}),
+      motorways = L.tileLayer(cmUrl, {styleId: 46561, attribution: cmAttr});
 
-			var map = L.map('map', {
-				center: [39.73, -104.99],
-				zoom: 10,
-				layers: [minimal, motorways, cities]
-			});
+    var map = L.map('map', {
+      center: [39.73, -104.99],
+      zoom: 10,
+      layers: [minimal, motorways, cities]
+    });
 
-			var baseLayers = {
-				"Minimal": minimal,
-				"Night View": midnight
-			};
+    var baseLayers = {
+      "Minimal": minimal,
+      "Night View": midnight
+    };
 
-			// Overlay layers are grouped
-			var groupedOverlays = {
-				"Landmarks": {
-					"Motorways": motorways,
-					"Cities": cities
-				},
-				"Points of Interest": {
-					"Restaurants": restaurants
-				}
-			};
+    // Overlay layers are grouped
+    var groupedOverlays = {
+      "Landmarks": {
+        "Motorways": motorways,
+        "Cities": cities
+      },
+      "Points of Interest": {
+        "Restaurants": restaurants
+      }
+    };
 
-			// Use the custom grouped layer control, not "L.control.layers"
-			L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
+    // Use the custom grouped layer control, not "L.control.layers"
+    var layerControl = L.control.groupedLayers(baseLayers, groupedOverlays);
+    map.addControl(layerControl);
+    
+    // Remove and add a layer
+    //layerControl.removeLayer(cities);
+    //layerControl.addOverlay(cities, "Cities", "New Category");
 
-		}());
-
-	</script>
+  </script>
 </body>
 </html>
