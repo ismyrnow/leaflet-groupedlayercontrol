@@ -146,6 +146,7 @@ L.Control.GroupedLayers = L.Control.extend({
 
     this._baseLayersList.innerHTML = '';
     this._overlaysList.innerHTML = '';
+    this._domGroups.length = 0;
 
     var baseLayersPresent = false,
 		    overlaysPresent = false,
