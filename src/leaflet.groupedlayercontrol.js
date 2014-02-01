@@ -59,7 +59,6 @@ L.Control.GroupedLayers = L.Control.extend({
   removeLayer: function (layer) {
     var id = L.Util.stamp(layer);
     delete this._layers[id];
-    this._domGroups.length=0;
     this._update();
     return this;
   },
@@ -147,6 +146,7 @@ L.Control.GroupedLayers = L.Control.extend({
 
     this._baseLayersList.innerHTML = '';
     this._overlaysList.innerHTML = '';
+    this._domGroups.length = 0;
 
     var baseLayersPresent = false,
 		    overlaysPresent = false,
