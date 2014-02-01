@@ -6,6 +6,9 @@ Leaflet layer control with support for grouping overlays together.
 [Demo](http://bl.ocks.org/ismyrnow/6123517)
 
 ## Usage
+
+### Initialization
+
 Add groupings to your overlay layers object, and swap out the default layer
 control with the new one.
 
@@ -26,6 +29,15 @@ L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
 ![preview](preview.png)
 
 The [example](example/basic.html) shows some basic CSS styling of the new control elements.
+
+### Adding a layer
+
+Adding a layer individually works similarly to the default layer control, but requires that 
+you also specify the group name, along with the layer and layer name.
+
+```javascript
+layerControl.addOverlay(cities, "Cities", "Landmarks").
+```
 
 ## Note
 
