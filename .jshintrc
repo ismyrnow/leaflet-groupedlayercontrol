@@ -1,0 +1,16 @@
+{
+  "browser" : true,
+  
+  "curly": true,
+  "latedef": "nofunc",
+  "eqeqeq": true,
+  "immed": true,
+  "newcap": true,
+  "noarg": true,
+  "sub": true,
+  "undef": "nofunc",
+  "white": true,
+  "indent": 2,
+  "trailing": true,
+  "quotmark": "single"
+}

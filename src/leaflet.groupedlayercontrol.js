@@ -1,6 +1,9 @@
-﻿// A layer control which provides for layer groupings.
+/* global L */
+
+// A layer control which provides for layer groupings.
 // Author: Ishmael Smyrnow
 L.Control.GroupedLayers = L.Control.extend({
+  
   options: {
     collapsed: true,
     position: 'topright',
@@ -21,7 +24,7 @@ L.Control.GroupedLayers = L.Control.extend({
     }
 
     for (i in groupedOverlays) {
-      for (j in groupedOverlays[i]) {
+      for (var j in groupedOverlays[i]) {
         this._addLayer(groupedOverlays[i][j], j, i, true);
       }
     }
@@ -198,7 +201,8 @@ L.Control.GroupedLayers = L.Control.extend({
   _addItem: function (obj) {
     var label = document.createElement('label'),
         input,
-        checked = this._map.hasLayer(obj.layer);
+        checked = this._map.hasLayer(obj.layer),
+        container;
 
     if (obj.overlay) {
       input = document.createElement('input');
