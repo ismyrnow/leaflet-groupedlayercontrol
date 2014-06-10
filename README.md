@@ -28,7 +28,7 @@ var groupedOverlays = {
 L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
 ```
 
-The [example](example/basic.html) shows some basic CSS styling of the new control elements.
+The [example](example/basic.html) shows its usage with various layers.
 
 ### Adding a layer
 
