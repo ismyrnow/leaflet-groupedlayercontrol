@@ -120,18 +120,17 @@ L.Control.GroupedLayers = L.Control.extend({
       overlay: overlay
     };
 
-    if (group) {
-      var groupId = this._groupList.indexOf(group);
+    group = group || '';
+    var groupId = this._groupList.indexOf(group);
 
-      if (groupId === -1) {
-        groupId = this._groupList.push(group) - 1;
-      }
-
-      this._layers[id].group = {
-        name: group,
-        id: groupId
-      };
+    if (groupId === -1) {
+      groupId = this._groupList.push(group) - 1;
     }
+
+    this._layers[id].group = {
+      name: group,
+      id: groupId
+    };
 
     if (this.options.autoZIndex && layer.setZIndex) {
       this._lastZIndex++;
