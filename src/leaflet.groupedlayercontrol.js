@@ -11,6 +11,7 @@ L.Control.GroupedLayers = L.Control.extend({
   },
 
   initialize: function (baseLayers, groupedOverlays, options) {
+    var i, j;
     L.Util.setOptions(this, options);
 
     this._layers = {};
@@ -19,7 +20,7 @@ L.Control.GroupedLayers = L.Control.extend({
     this._groupList = [];
     this._domGroups = [];
 
-    for (var i in baseLayers) {
+    for (i in baseLayers) {
       this._addLayer(baseLayers[i], i);
     }
 
