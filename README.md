@@ -41,7 +41,7 @@ layerControl.addOverlay(cities, "Cities", "Landmarks").
 
 ## Note
 
-This plugin only affects how the layers are dislpayed in the layer control,
+This plugin only affects how the layers are displayed in the layer control,
 and not how they are rendered or layered on the map.
 
 Grouping base layers is not currently supported.
