@@ -25,7 +25,9 @@ var groupedOverlays = {
   }
 };
 
-L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
+var options = { exclusiveGroups: ["Landmarks"] };
+
+L.control.groupedLayers(baseLayers, groupedOverlays, options).addTo(map);
 ```
 
 The [example](example/basic.html) shows its usage with various layers.
@@ -44,7 +46,8 @@ layerControl.addOverlay(cities, "Cities", "Landmarks").
 This plugin only affects how the layers are displayed in the layer control,
 and not how they are rendered or layered on the map.
 
-Grouping base layers is not currently supported.
+Grouping base layers is not currently supported, but adding exclusive layer
+groups is. Layers in an exclusive layer group render as radio inputs.
 
 ## License
 
