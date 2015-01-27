@@ -276,7 +276,9 @@ L.Control.GroupedLayers = L.Control.extend({
 
       if (input.checked && !this._map.hasLayer(obj.layer)) {
         this._map.addLayer(obj.layer);
-
+			    if(!obj.overlay) {
+				    obj.layer.setZIndex(0);
+				  }
       } else if (!input.checked && this._map.hasLayer(obj.layer)) {
         this._map.removeLayer(obj.layer);
       }
