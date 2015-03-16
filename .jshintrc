@@ -1,5 +1,6 @@
 {
-  "browser" : true,
+  "browser": true,
+  "node": true,
   
   "curly": true,
   "latedef": "nofunc",

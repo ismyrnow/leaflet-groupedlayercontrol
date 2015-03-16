@@ -7,6 +7,16 @@ Leaflet layer control with support for grouping overlays together.
 
 [Demo](http://ismyrnow.github.io/Leaflet.groupedlayercontrol/example/basic.html)
 
+## Installation
+
+Include the compressed JavaScript and CSS files located in the `/dist` folder.
+
+This project is also available via bower:
+
+```
+bower install Leaflet.groupedlayercontrol
+```
+
 ## Usage
 
 ### Initialization
@@ -51,5 +61,5 @@ groups is. Layers in an exclusive layer group render as radio inputs.
 
 ## License
 
-Leaflet.groupedlayercontrol is free software, and may be redistributed under 
+Leaflet.groupedlayercontrol is free software, and may be redistributed under
 the MIT-LICENSE.
