@@ -1,5 +1,5 @@
 {
-  "name": "Leaflet.groupedlayercontrol",
+  "name": "leaflet-groupedlayercontrol",
   "version": "0.3.0",
   "description": "A Leaflet layer control with support for grouping overlays together",
   "main": "dist/leaflet.groupedlayercontrol.min.js",
