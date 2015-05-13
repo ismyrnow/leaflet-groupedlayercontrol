@@ -3,7 +3,7 @@
 // A layer control which provides for layer groupings.
 // Author: Ishmael Smyrnow
 L.Control.GroupedLayers = L.Control.extend({
-  
+
   options: {
     collapsed: true,
     position: 'topright',
@@ -126,13 +126,13 @@ L.Control.GroupedLayers = L.Control.extend({
     };
 
     group = group || '';
-    var groupId = this._groupList.indexOf(group);
+    var groupId = this._indexOf(this._groupList, group);
 
     if (groupId === -1) {
       groupId = this._groupList.push(group) - 1;
     }
 
-    var exclusive = (this.options.exclusiveGroups.indexOf(group) != -1);
+    var exclusive = (this._indexOf(this.options.exclusiveGroups, group) != -1);
 
     this._layers[id].group = {
       name: group,
@@ -291,6 +291,15 @@ L.Control.GroupedLayers = L.Control.extend({
 
   _collapse: function () {
     this._container.className = this._container.className.replace(' leaflet-control-layers-expanded', '');
+  },
+
+  _indexOf: function (arr, obj) {
+    for (var i = 0, j = arr.length; i < j; i++) {
+      if (arr[i] === obj) {
+        return i;
+      }
+    }
+    return -1;
   }
 });
 
