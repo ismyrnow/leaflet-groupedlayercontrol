@@ -11,3 +11,8 @@
 .leaflet-control-layers-group label {
   padding-left: .5em;
 }
+
+select.leaflet-control-layers-selector {
+  margin-left: 10px;
+  margin-right: 10px;
+}

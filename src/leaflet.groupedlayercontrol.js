@@ -8,7 +8,8 @@ L.Control.GroupedLayers = L.Control.extend({
     collapsed: true,
     position: 'topright',
     autoZIndex: true,
-    exclusiveGroups: []
+    exclusiveGroups: [],
+    labelLayers: []
   },
 
   initialize: function (baseLayers, groupedOverlays, options) {
@@ -247,9 +248,9 @@ L.Control.GroupedLayers = L.Control.extend({
 
   _addItem: function (obj) {
     var label = document.createElement('label'),
-        input,
+        input, labelInput,
         checked = obj.layer.length ? this._hasAtLeastOneLayer(obj.layer) : this._map.hasLayer(obj.layer),
-        container;
+        container, select;
 
     if (obj.overlay) {
       if (obj.group.exclusive) {
@@ -276,10 +277,23 @@ L.Control.GroupedLayers = L.Control.extend({
     label.appendChild(name);
 
     if (obj.layer.length) {
-      var select = this._createSelectElement(obj.layer);
+      select = this._createSelectElement(obj.layer);
       L.DomEvent.on(select, 'change', this._onInputClick, this);
       select.layerId = L.Util.stamp(obj.layer);
       label.appendChild(select);
+    }
+
+    if (this._indexOf(this.options.labelLayers, obj.name) !== -1) {
+      labelInput = document.createElement('input');
+      labelInput.type = 'checkbox';
+      labelInput.className = 'leaflet-control-layers-selector';
+      labelInput.defaultChecked = false;
+      labelInput.layerInput = input;
+      label.appendChild(labelInput);
+      var labelName = document.createElement('span');
+      labelName.innerHTML = ' (labels)';
+      label.appendChild(labelName);
+      L.DomEvent.on(labelInput, 'click', this._onInputClick, this);
     }
 
     if (obj.overlay) {
@@ -328,43 +342,66 @@ L.Control.GroupedLayers = L.Control.extend({
         inputsLen = inputs.length,
         selects = this._form.getElementsByTagName('select'),
         select,
-        layer, selected, visible;
+        layer, selected, visible,
+        labels = [];
 
     this._handlingClick = true;
 
     for (i = 0; i < inputsLen; i++) {
       input = inputs[i];
       obj = this._layers[input.layerId];
-
-      if (input.checked) {
-        if (obj.layer.length) {
-          for (var j = 0; j < obj.layer.length; j++) {
-            layer = obj.layer[j].layer;
+      if (obj) {
+        if (input.checked) {
+          if (obj.layer.length) {
             select = this._getSelect(selects, input.layerId);
-            selected = select[j].selected;
-            visible = this._map.hasLayer(layer);
-            if (visible && !selected) { this._map.removeLayer(layer); }
-            else if (!visible && selected) { this._map.addLayer(layer); }
+            for (var j = 0; j < obj.layer.length; j++) {
+              layer = obj.layer[j].layer;
+              selected = select[j].selected;
+              visible = this._map.hasLayer(layer);
+              if (visible && !selected) {
+                this._map.removeLayer(layer);
+              } else if (!visible && selected) {
+                this._map.addLayer(layer);
+              }
+            }
+          } else {
+            if (!this._map.hasLayer(obj.layer)) {
+              this._map.addLayer(obj.layer);
+            }
           }
         } else {
-          if (!this._map.hasLayer(obj.layer)) {
-            this._map.addLayer(obj.layer);
+          if (obj.layer.length) {
+            for (var j = 0; j < obj.layer.length; j++) {
+              layer = obj.layer[j].layer;
+              visible = this._map.hasLayer(layer);
+              if (visible) {
+                this._map.removeLayer(layer);
+              }
+            }
+          } else {
+            if (this._map.hasLayer(obj.layer)) {
+              this._map.removeLayer(obj.layer);
+            }
           }
         }
-      } else {
-        if (obj.layer.length) {
-          for (var j = 0; j < obj.layer.length; j++) {
-            layer = obj.layer[j].layer;
-            visible = this._map.hasLayer(layer);
-            if (visible) { this._map.removeLayer(layer); }
-          }
-        } else {
-          if (this._map.hasLayer(obj.layer)) {
-            this._map.removeLayer(obj.layer);
+      }
+      else if (input.layerInput) {
+        if (input.checked && input.layerInput.checked) {
+          obj = this._layers[input.layerInput.layerId];
+          if (obj.layer.length) {
+            select = this._getSelect(selects, input.layerInput.layerId);
+            for (j = 0; j < obj.layer.length; j++) {
+              if (select[j].selected) {
+                labels.push(obj.layer[j].layer.labelSourceName);
+              }
+            }
+          } else {
+            labels.push(obj.labelSourceName);
           }
         }
       }
     }
+    MapActions.updateLabels(labels);
 
     this._handlingClick = false;
   },
