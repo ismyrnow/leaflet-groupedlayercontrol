@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic Example</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+  <link rel="stylesheet" href="../src/leaflet.groupedlayercontrol.css" />
+</head>
+<body>
+  <div id="map" style="width: 600px; height: 400px"></div>
+
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <script src="../src/leaflet.groupedlayercontrol.js"></script>
+  <script>
+    var cities = new L.LayerGroup();
+    L.marker([39.61, -105.02]).bindPopup('Littleton, CO.').addTo(cities);
+    L.marker([39.74, -104.99]).bindPopup('Denver, CO.').addTo(cities);
+    L.marker([39.73, -104.8]).bindPopup('Aurora, CO.').addTo(cities);
+    L.marker([39.77, -105.23]).bindPopup('Golden, CO.').addTo(cities);
+
+    var restaurants = new L.LayerGroup();
+    L.marker([39.69, -104.85]).bindPopup('A restaurant').addTo(restaurants);
+    L.marker([39.69, -105.12]).bindPopup('A restaurant').addTo(restaurants);
+
+    var dogs = new L.LayerGroup();
+    L.marker([39.79, -104.95]).bindPopup('A dog').addTo(dogs);
+    L.marker([39.79, -105.22]).bindPopup('A dog').addTo(dogs);
+
+    var cats = new L.LayerGroup();
+    L.marker([39.59, -104.75]).bindPopup('A cat').addTo(cats);
+    L.marker([39.59, -105.02]).bindPopup('A cat').addTo(cats);
+
+    var mbAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery � <a href="http://mapbox.com">Mapbox</a>',
+      mbUrl = 'https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png';
+
+    var grayscale   = L.tileLayer(mbUrl, {id: 'examples.map-20v6611k', attribution: mbAttr}),
+      streets  = L.tileLayer(mbUrl, {id: 'examples.map-i875mjb7',   attribution: mbAttr});
+
+    var map = L.map('map', {
+      center: [39.73, -104.99],
+      zoom: 10,
+      layers: [grayscale, cities]
+    });
+
+    var baseLayers = {
+      "Grayscale": grayscale,
+      "Streets": streets
+    };
+
+    // Overlay layers are grouped
+    var groupedOverlays = {
+      "Random": {
+        "Dogs": dogs,
+        "Cats": cats,
+        "Landmarks": [
+          { name: "Cities", layer: cities },
+          { name: "Restaurants", layer: restaurants }
+        ]
+      }
+    };
+
+    // Make the "Landmarks" group exclusive (use radio inputs)
+    var options = { exclusiveGroups: ["Landmarks"] };
+
+    // Use the custom grouped layer control, not "L.control.layers"
+    var layerControl = L.control.groupedLayers(baseLayers, groupedOverlays, options);
+    map.addControl(layerControl);
+
+    // Remove and add a layer
+    //layerControl.removeLayer(cities);
+    //layerControl.addOverlay(cities, "Cities", "New Category");
+  </script>
+</body>
+</html>
