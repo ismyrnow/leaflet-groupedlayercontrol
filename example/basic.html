@@ -63,7 +63,7 @@
     };
 
     // Make the "Landmarks" group exclusive (use radio inputs)
-    var options = { exclusiveGroups: ["Landmarks"] };
+    var options = { exclusiveGroups: ["Landmarks"], groupCheckboxes: true };
 
     // Use the custom grouped layer control, not "L.control.layers"
     var layerControl = L.control.groupedLayers(baseLayers, groupedOverlays, options);

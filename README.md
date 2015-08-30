@@ -35,7 +35,7 @@ var groupedOverlays = {
   }
 };
 
-var options = { exclusiveGroups: ["Landmarks"] };
+var options = { exclusiveGroups: ["Landmarks"], groupCheckboxes: true };
 
 L.control.groupedLayers(baseLayers, groupedOverlays, options).addTo(map);
 ```
