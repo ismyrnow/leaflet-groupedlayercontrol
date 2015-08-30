@@ -8,7 +8,8 @@ L.Control.GroupedLayers = L.Control.extend({
     collapsed: true,
     position: 'topright',
     autoZIndex: true,
-    exclusiveGroups: []
+    exclusiveGroups: [],
+    groupCheckboxes: false
   },
 
   initialize: function (baseLayers, groupedOverlays, options) {
@@ -223,7 +224,7 @@ L.Control.GroupedLayers = L.Control.extend({
     }
 
     input.layerId = L.Util.stamp(obj.layer);
-
+    input.groupID = obj.group.id;
     L.DomEvent.on(input, 'click', this._onInputClick, this);
 
     var name = document.createElement('span');
@@ -243,9 +244,26 @@ L.Control.GroupedLayers = L.Control.extend({
         groupContainer.className = 'leaflet-control-layers-group';
         groupContainer.id = 'leaflet-control-layers-group-' + obj.group.id;
 
-        var groupLabel = document.createElement('span');
-        groupLabel.className = 'leaflet-control-layers-group-name';
-        groupLabel.innerHTML = obj.group.name;
+        var groupLabel = document.createElement('label');
+        groupLabel.className = 'leaflet-control-layers-group-label';
+        
+        if ("" != obj.group.name && !obj.group.exclusive){
+          // ------ add a group checkbox with an _onInputClickGroup function
+          if (this.options.groupCheckboxes) {
+            var groupInput = document.createElement('input');
+            groupInput.type = 'checkbox';
+            groupInput.className = 'leaflet-control-layers-group-selector';
+            groupInput.groupID = obj.group.id;
+            groupInput.legend = this;
+            L.DomEvent.on(groupInput, 'click', this._onGroupInputClick, groupInput);
+            groupLabel.appendChild(groupInput);
+          };
+        };
+
+        var groupName = document.createElement('span');
+        groupName.className = 'leaflet-control-layers-group-name';
+        groupName.innerHTML = obj.group.name;
+        groupLabel.appendChild(groupName);
 
         groupContainer.appendChild(groupLabel);
         container.appendChild(groupContainer);
@@ -262,7 +280,30 @@ L.Control.GroupedLayers = L.Control.extend({
 
     return label;
   },
+  
+  _onGroupInputClick: function () {
+    var i, input, obj;
+    
+    this_legend = this.legend;
+    this_legend._handlingClick = true;
 
+    var inputs = this_legend._form.getElementsByTagName('input');
+    var inputsLen = inputs.length;
+    for (i = 0; i < inputsLen; i++) {
+      input = inputs[i];
+      if ( input.groupID == this.groupID && input.className == 'leaflet-control-layers-selector') {
+          input.checked = this.checked;
+          obj = this_legend._layers[input.layerId];
+          if (input.checked && !this_legend._map.hasLayer(obj.layer)) {
+              this_legend._map.addLayer(obj.layer);
+          } else if (!input.checked && this_legend._map.hasLayer(obj.layer)) {
+              this_legend._map.removeLayer(obj.layer);
+          };
+      };
+    };
+    this_legend._handlingClick = false;
+  },
+  
   _onInputClick: function () {
     var i, input, obj,
         inputs = this._form.getElementsByTagName('input'),
@@ -272,13 +313,15 @@ L.Control.GroupedLayers = L.Control.extend({
 
     for (i = 0; i < inputsLen; i++) {
       input = inputs[i];
-      obj = this._layers[input.layerId];
+      if (input.className == 'leaflet-control-layers-selector') {
+        obj = this._layers[input.layerId];
 
-      if (input.checked && !this._map.hasLayer(obj.layer)) {
-        this._map.addLayer(obj.layer);
+        if (input.checked && !this._map.hasLayer(obj.layer)) {
+          this._map.addLayer(obj.layer);
 
-      } else if (!input.checked && this._map.hasLayer(obj.layer)) {
-        this._map.removeLayer(obj.layer);
+        } else if (!input.checked && this._map.hasLayer(obj.layer)) {
+          this._map.removeLayer(obj.layer);
+        }
       }
     }
 
