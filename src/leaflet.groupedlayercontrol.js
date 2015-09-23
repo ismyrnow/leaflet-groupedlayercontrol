@@ -39,7 +39,8 @@ L.Control.GroupedLayers = L.Control.extend({
 
     map
         .on('layeradd', this._onLayerChange, this)
-        .on('layerremove', this._onLayerChange, this);
+        .on('layerremove', this._onLayerChange, this)
+        .on('viewreset', this._update, this); // catch min/max zoomlevel constraints
 
     return this._container;
   },
@@ -221,6 +222,16 @@ L.Control.GroupedLayers = L.Control.extend({
       }
     } else {
       input = this._createRadioElement('leaflet-base-layers', checked);
+    }
+
+    // Turn off layer and disable input if current zoom is out of bounds
+    if ((obj.layer.options.hasOwnProperty('maxZoom') &&
+         obj.layer.options.maxZoom < this._map.getZoom()) ||
+        (obj.layer.options.hasOwnProperty('minZoom') &&
+         obj.layer.options.minZoom > this._map.getZoom())) {
+      input.defaultChecked = false;
+      input.disabled = true;
+      this._map.removeLayer(obj.layer);
     }
 
     input.layerId = L.Util.stamp(obj.layer);

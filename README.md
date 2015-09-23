@@ -59,6 +59,9 @@ and not how they are rendered or layered on the map.
 Grouping base layers is not currently supported, but adding exclusive layer
 groups is. Layers in an exclusive layer group render as radio inputs.
 
+Layers with `minZoom` and `maxZoom` options set will be automatically disabled
+when the map is outside of the defined zoom levels of the layer.
+
 ## License
 
 Leaflet.groupedlayercontrol is free software, and may be redistributed under
