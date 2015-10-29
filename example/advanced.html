@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Basic Example</title>
+  <title>Advanced Example</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
@@ -32,8 +32,20 @@
       }
     };
 
+    var options = {
+      // Make the "Landmarks" group exclusive (use radio inputs)
+      exclusiveGroups: ["Landmarks"],
+      // Show a checkbox next to non-exclusive group labels for toggling all
+      groupCheckboxes: true
+    };
+
     // Use the custom grouped layer control, not "L.control.layers"
-    L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
+    var layerControl = L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays, options);
+    map.addControl(layerControl);
+
+    // Remove and add a layer
+    //layerControl.removeLayer(cities);
+    //layerControl.addOverlay(cities, "Cities", "New Category");
   </script>
 </body>
 </html>
