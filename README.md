@@ -11,7 +11,7 @@ Leaflet layer control with support for grouping overlays together.
 
 Include the compressed JavaScript and CSS files located in the `/dist` folder.
 
-This project is also available via bower:
+This project is also available via bower and jspm:
 
 ```
 bower install leaflet-groupedlayercontrol
@@ -35,12 +35,29 @@ var groupedOverlays = {
   }
 };
 
-var options = { exclusiveGroups: ["Landmarks"], groupCheckboxes: true };
+L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
+```
+
+The [basic example](example/basic.html) shows simple usage, while the
+[advanced example](example/advanced.html) shows usage of exclusive layer groups
+and group checkboxes.
+
+### Advanced usage
+
+Optionally, you can pass options to the layer control for additional functionality.
+
+```javascript
+var options = {
+  // Make the "Landmarks" group exclusive (use radio inputs)
+  exclusiveGroups: ["Landmarks"],
+  // Show a checkbox next to non-exclusive group labels for toggling all
+  groupCheckboxes: true
+};
 
 L.control.groupedLayers(baseLayers, groupedOverlays, options).addTo(map);
 ```
 
-The [example](example/basic.html) shows its usage with various layers.
+![advanced preview](preview-advanced.png)
 
 ### Adding a layer
 
