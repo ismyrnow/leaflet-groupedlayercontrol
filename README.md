@@ -2,10 +2,12 @@ Leaflet.groupedlayercontrol
 ===========================
 
 Leaflet layer control with support for grouping overlays together.
+Also supports making groups exclusive (radio instead of checkbox).
 
 ![preview](preview.png)
 
-[Demo](http://ismyrnow.github.io/Leaflet.groupedlayercontrol/example/basic.html)
+Demos: [Basic](http://ismyrnow.github.io/Leaflet.groupedlayercontrol/example/basic.html) |
+[Advanced](http://ismyrnow.github.io/Leaflet.groupedlayercontrol/example/advanced.html)
 
 ## Installation
 
@@ -38,13 +40,9 @@ var groupedOverlays = {
 L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
 ```
 
-The [basic example](example/basic.html) shows simple usage, while the
-[advanced example](example/advanced.html) shows usage of exclusive layer groups
-and group checkboxes.
-
 ### Advanced usage
 
-Optionally, you can pass options to the layer control for additional functionality.
+For added functionality, pass options when creating the layer control.
 
 ```javascript
 var options = {
