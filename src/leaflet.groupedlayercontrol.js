@@ -37,6 +37,9 @@ L.Control.GroupedLayers = L.Control.extend({
     this._initLayout();
     this._update();
 
+    this._activeBaseLayer = this._findActiveBaseLayer()
+    this._activeOverlayLayers = this._findActiveOverlayLayers()
+
     map
         .on('layeradd', this._onLayerChange, this)
         .on('layerremove', this._onLayerChange, this);
@@ -145,6 +148,7 @@ L.Control.GroupedLayers = L.Control.extend({
       this._lastZIndex++;
       layer.setZIndex(this._lastZIndex);
     }
+    this._recountLayers()
   },
 
   _update: function () {
@@ -152,6 +156,7 @@ L.Control.GroupedLayers = L.Control.extend({
       return;
     }
 
+    this._recountLayers()
     this._baseLayersList.innerHTML = '';
     this._overlaysList.innerHTML = '';
     this._domGroups.length = 0;
@@ -171,6 +176,9 @@ L.Control.GroupedLayers = L.Control.extend({
   },
 
   _onLayerChange: function (e) {
+    L.Control.Layers.prototype._onLayerChange.apply(this, arguments)
+    this._recountLayers()
+
     var obj = this._layers[L.Util.stamp(e.layer)];
 
     if (!obj) { return; }
@@ -286,6 +294,7 @@ L.Control.GroupedLayers = L.Control.extend({
     
     this_legend = this.legend;
     this_legend._handlingClick = true;
+    this._recountLayers()
 
     var inputs = this_legend._form.getElementsByTagName('input');
     var inputsLen = inputs.length;
@@ -305,11 +314,15 @@ L.Control.GroupedLayers = L.Control.extend({
   },
   
   _onInputClick: function () {
+
     var i, input, obj,
         inputs = this._form.getElementsByTagName('input'),
         inputsLen = inputs.length;
 
     this._handlingClick = true;
+
+    this._recountLayers()
+    L.Control.Layers.prototype._onInputClick.call(this)
 
     for (i = 0; i < inputsLen; i++) {
       input = inputs[i];
@@ -343,7 +356,78 @@ L.Control.GroupedLayers = L.Control.extend({
       }
     }
     return -1;
+  },
+  
+  /**
+   * Get currently active base layer on the map
+   * @return {Object} l where l.name - layer name on the control,
+   *  l.layer is L.TileLayer, l.overlay is overlay layer.
+   */
+  getActiveBaseLayer: function () {
+    return this._activeBaseLayer
+  },
+
+  /**
+   * Get currently active overlay layers on the map
+   * @return {{layerId: l}} where layerId is <code>L.stamp(l.layer)</code>
+   *  and l @see #getActiveBaseLayer jsdoc.
+   */
+  getActiveOverlayLayers: function () {
+    return this._activeOverlayLayers
+  },
+
+  _findActiveBaseLayer: function () {
+    var layers = this._layers
+    for (var layerId in layers) {
+      if (this._layers.hasOwnProperty(layerId)) {
+        var layer = layers[layerId]
+        if (!layer.overlay && this._map.hasLayer(layer.layer)) {
+          return layer
+        }
+      }
+    }
+    throw new Error('Control doesn\'t have any active base layer!')
+  },
+
+  _findActiveOverlayLayers: function () {
+    var result = {}
+    var layers = this._layers
+    for (var layerId in layers) {
+      if (this._layers.hasOwnProperty(layerId)) {
+        var layer = layers[layerId]
+        if (layer.overlay && this._map.hasLayer(layer.layer)) {
+          result[layerId] = layer
+        }
+      }
+    }
+    return result
+  },
+
+  _recountLayers: function () {
+    var i, input, obj,
+      inputs = this._form.getElementsByTagName('input'),
+      inputsLen = inputs.length;
+
+    for (i = 0; i < inputsLen; i++) {
+      input = inputs[i]
+      obj = this._layers[input.layerId]
+
+      var map = this._map ? this._map.hasLayer(obj.layer) : null;
+
+      if (input.checked && !map) {
+        if (obj.overlay) {
+          this._activeOverlayLayers[input.layerId] = obj
+        } else {
+          this._activeBaseLayer = obj
+        }
+      } else if (!input.checked && map) {
+        if (obj.overlay) {
+          delete this._activeOverlayLayers[input.layerId]
+        }
+      }
+    }
   }
+
 });
 
 L.control.groupedLayers = function (baseLayers, groupedOverlays, options) {
