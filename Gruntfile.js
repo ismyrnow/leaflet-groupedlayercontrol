@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
-  var banner = '/*! Version: <%= pkg.version %>\nDate: <%= grunt.template.today("yyyy-mm-dd") %> */\n';
-
+  var banner = '/*! Version: <%= pkg.version %>\nDate: <%= grunt.template.today("yyyy-mm-dd") %> */\n(function (){\n\'use strict\';';
+  var footer = '\n}());'
   require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
@@ -9,7 +9,8 @@ module.exports = function(grunt) {
       options: {
         banner: banner,
         preserveComments: 'some',
-        sourceMap: true
+        sourceMap: true,
+        footer: footer
       },
       dist: {
         files: {
