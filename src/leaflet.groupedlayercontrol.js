@@ -1,7 +1,6 @@
-/* global L */
-
 // A layer control which provides for layer groupings.
 // Author: Ishmael Smyrnow
+var L = (typeof require === 'function') ? require('leaflet') : window.L;
 L.Control.GroupedLayers = L.Control.extend({
 
   options: {
@@ -207,7 +206,7 @@ L.Control.GroupedLayers = L.Control.extend({
     var label = document.createElement('label'),
         input,
         checked = this._map.hasLayer(obj.layer),
-        container;
+        container, groupRadioName;
 
     if (obj.overlay) {
       if (obj.group.exclusive) {
@@ -246,7 +245,7 @@ L.Control.GroupedLayers = L.Control.extend({
 
         var groupLabel = document.createElement('label');
         groupLabel.className = 'leaflet-control-layers-group-label';
-        
+
         if ("" != obj.group.name && !obj.group.exclusive){
           // ------ add a group checkbox with an _onInputClickGroup function
           if (this.options.groupCheckboxes) {
@@ -280,10 +279,10 @@ L.Control.GroupedLayers = L.Control.extend({
 
     return label;
   },
-  
+
   _onGroupInputClick: function () {
     var i, input, obj;
-    
+
     this_legend = this.legend;
     this_legend._handlingClick = true;
 
@@ -303,7 +302,7 @@ L.Control.GroupedLayers = L.Control.extend({
     };
     this_legend._handlingClick = false;
   },
-  
+
   _onInputClick: function () {
     var i, input, obj,
         inputs = this._form.getElementsByTagName('input'),
