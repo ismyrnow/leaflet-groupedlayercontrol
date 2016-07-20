@@ -7,3 +7,8 @@
 .leaflet-control-layers-group {
   margin-bottom: .5em;
 }
+
+.leaflet-control-layers-scrollbar {
+  overflow-y: scroll;
+  padding-right: 5px;
+}
