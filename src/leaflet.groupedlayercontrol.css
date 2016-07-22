@@ -10,5 +10,5 @@
 
 .leaflet-control-layers-scrollbar {
   overflow-y: scroll;
-  padding-right: 5px;
+  padding-right: 10px;
 }
