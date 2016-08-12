@@ -63,7 +63,7 @@ Adding a layer individually works similarly to the default layer control,
 except that you can also specify a group name, along with the layer and layer name.
 
 ```javascript
-layerControl.addOverlay(cities, "Cities", "Landmarks").
+layerControl.addOverlay(cities, "Cities", "Landmarks");
 ```
 
 ## Note
