@@ -9,7 +9,24 @@ L.Control.GroupedLayers = L.Control.extend({
     position: 'topright',
     autoZIndex: true,
     exclusiveGroups: [],
-    groupCheckboxes: false
+    groupCheckboxes: false,
+    // Whether to sort the layers. When `false`, layers will keep the order
+    // in which they were added to the control.
+    sortLayers: false,
+      // A [compare function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
+    // that will be used for sorting the layers, when `sortLayers` is `true`.
+    // The function receives both the `L.Layer` instances and their names, as in
+    // `sortFunction(layerA, layerB, nameA, nameB)`.
+    // By default, it sorts layers alphabetically by their name.
+    sortFunction: function (layerA, layerB, nameA, nameB) {
+      if (nameA < nameB) {
+        return -1;
+      } else if (nameB < nameA) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
   },
 
   initialize: function (baseLayers, groupedOverlays, options) {
@@ -143,6 +160,12 @@ L.Control.GroupedLayers = L.Control.extend({
     if (this.options.autoZIndex && layer.setZIndex) {
       this._lastZIndex++;
       layer.setZIndex(this._lastZIndex);
+    }
+
+    if (this.options.sortLayers) {
+      this._layers.sort(L.bind(function (a, b) {
+        return this.options.sortFunction(a.layer, b.layer, a.name, b.name);
+      }, this));
     }
   },
 
