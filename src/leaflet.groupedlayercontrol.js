@@ -16,7 +16,7 @@ L.Control.GroupedLayers = L.Control.extend({
     var i, j;
     L.Util.setOptions(this, options);
 
-    this._layers = {};
+    this._layers = [];
     this._lastZIndex = 0;
     this._handlingClick = false;
     this._groupList = [];
@@ -64,9 +64,20 @@ L.Control.GroupedLayers = L.Control.extend({
 
   removeLayer: function (layer) {
     var id = L.Util.stamp(layer);
-    delete this._layers[id];
+    var _layer = this._getLayer(id);
+    if (_layer) {
+      delete this.layers[this.layers.indexOf(_layer)];
+    }
     this._update();
     return this;
+  },
+
+  _getLayer: function (id) {
+    for (var i = 0; i < this._layers.length; i++) {
+      if (this._layers[i] && L.stamp(this._layers[i].layer) === id) {
+        return this._layers[i];
+      }
+    }
   },
 
   _initLayout: function () {
@@ -119,11 +130,12 @@ L.Control.GroupedLayers = L.Control.extend({
   _addLayer: function (layer, name, group, overlay) {
     var id = L.Util.stamp(layer);
 
-    this._layers[id] = {
+    var _layer = {
       layer: layer,
       name: name,
       overlay: overlay
     };
+    this._layers.push(_layer);
 
     group = group || '';
     var groupId = this._indexOf(this._groupList, group);
@@ -134,7 +146,7 @@ L.Control.GroupedLayers = L.Control.extend({
 
     var exclusive = (this._indexOf(this.options.exclusiveGroups, group) !== -1);
 
-    this._layers[id].group = {
+    _layer.group = {
       name: group,
       id: groupId,
       exclusive: exclusive
@@ -159,7 +171,7 @@ L.Control.GroupedLayers = L.Control.extend({
       overlaysPresent = false,
       i, obj;
 
-    for (i in this._layers) {
+    for (var i = 0; i < this._layers.length; i++) {
       obj = this._layers[i];
       this._addItem(obj);
       overlaysPresent = overlaysPresent || obj.overlay;
@@ -170,7 +182,7 @@ L.Control.GroupedLayers = L.Control.extend({
   },
 
   _onLayerChange: function (e) {
-    var obj = this._layers[L.Util.stamp(e.layer)],
+    var obj = this._getLayer(L.Util.stamp(e.layer)),
       type;
 
     if (!obj) {
@@ -298,7 +310,7 @@ L.Control.GroupedLayers = L.Control.extend({
       input = inputs[i];
       if (input.groupID === this.groupID && input.className === 'leaflet-control-layers-selector') {
         input.checked = this.checked;
-        obj = this_legend._layers[input.layerId];
+        obj = this_legend._getLayer(input.layerId);
         if (input.checked && !this_legend._map.hasLayer(obj.layer)) {
           this_legend._map.addLayer(obj.layer);
         } else if (!input.checked && this_legend._map.hasLayer(obj.layer)) {
@@ -320,7 +332,7 @@ L.Control.GroupedLayers = L.Control.extend({
     for (i = 0; i < inputsLen; i++) {
       input = inputs[i];
       if (input.className === 'leaflet-control-layers-selector') {
-        obj = this._layers[input.layerId];
+        obj = this._getLayer(input.layerId);
 
         if (input.checked && !this._map.hasLayer(obj.layer)) {
           this._map.addLayer(obj.layer);
