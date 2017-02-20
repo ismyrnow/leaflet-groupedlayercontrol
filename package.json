@@ -1,13 +1,14 @@
 {
   "name": "leaflet-groupedlayercontrol",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A Leaflet layer control with support for grouping overlays together",
   "main": "dist/leaflet.groupedlayercontrol.min.js",
   "directories": {
     "example": "example"
   },
   "scripts": {
-    "test": "eslint src"
+    "test": "eslint src",
+    "build": "grunt"
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,7 @@
     "load-grunt-tasks": "^3.1.0"
   },
   "dependencies": {
-    "leaflet": "^0.7.3"
+    "leaflet": "^1.0.1"
   },
   "jspm": {
     "registry": "jspm",
