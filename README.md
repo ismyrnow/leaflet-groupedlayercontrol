@@ -1,4 +1,4 @@
-Leaflet.groupedlayercontrol
+leaflet-groupedlayercontrol
 ===========================
 
 Leaflet layer control with support for grouping overlays together.
@@ -6,8 +6,8 @@ Also supports making groups exclusive (radio instead of checkbox).
 
 ![preview](preview.png)
 
-Demos: [Basic](http://ismyrnow.github.io/Leaflet.groupedlayercontrol/example/basic.html) |
-[Advanced](http://ismyrnow.github.io/Leaflet.groupedlayercontrol/example/advanced.html)
+Demos: [Basic](http://ismyrnow.github.io/leaflet-groupedlayercontrol/example/basic.html) |
+[Advanced](http://ismyrnow.github.io/leaflet-groupedlayercontrol/example/advanced.html)
 
 ## Installation
 
@@ -76,5 +76,5 @@ groups is. Layers in an exclusive layer group render as radio inputs.
 
 ## License
 
-Leaflet.groupedlayercontrol is free software, and may be redistributed under
+leaflet-groupedlayercontrol is free software, and may be redistributed under
 the MIT-LICENSE.

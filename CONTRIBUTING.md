@@ -5,7 +5,7 @@ agree to abide by the [code of conduct](CODE_OF_CONDUCT.md).
 
 Fork, then clone the repo:
 
-    git clone git@github.com:your-username/Leaflet.groupedlayercontrol.git
+    git clone git@github.com:your-username/leaflet-groupedlayercontrol.git
 
 Set up your machine:
 
@@ -21,7 +21,7 @@ Make your change. Make the tests pass:
 
 Push to your fork and [submit a pull request][pr].
 
-[pr]: https://github.com/ismyrnow/Leaflet.groupedlayercontrol/compare/
+[pr]: https://github.com/ismyrnow/leaflet-groupedlayercontrol/compare/
 
 At this point you're waiting on me. I like to at least comment on pull requests,
 and I may suggest some changes or improvements or alternatives.

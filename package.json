@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:ismyrnow/Leaflet.groupedlayercontrol.git"
+    "url": "git@github.com:ismyrnow/leaflet-groupedlayercontrol.git"
   },
   "keywords": [
     "leaflet",
@@ -25,9 +25,9 @@
   "author": "Ishmael Smyrnow",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ismyrnow/Leaflet.groupedlayercontrol/issues"
+    "url": "https://github.com/ismyrnow/leaflet-groupedlayercontrol/issues"
   },
-  "homepage": "https://github.com/ismyrnow/Leaflet.groupedlayercontrol",
+  "homepage": "https://github.com/ismyrnow/leaflet-groupedlayercontrol",
   "devDependencies": {
     "eslint": "^3.1.1",
     "grunt": "^0.4.5",
