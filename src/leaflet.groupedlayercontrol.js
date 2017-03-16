@@ -9,7 +9,10 @@ L.Control.GroupedLayers = L.Control.extend({
     position: 'topright',
     autoZIndex: true,
     exclusiveGroups: [],
-    groupCheckboxes: false
+    groupCheckboxes: false,
+    groupsCollapsable: false,
+    groupsCollapseClass: "leaflet-control-layers-group-collapse-default",
+    groupsExpandClass: "leaflet-control-layers-group-expand-default",
   },
 
   initialize: function (baseLayers, groupedOverlays, options) {
@@ -257,7 +260,11 @@ L.Control.GroupedLayers = L.Control.extend({
       // Create the group container if it doesn't exist
       if (!groupContainer) {
         groupContainer = document.createElement('div');
-        groupContainer.className = 'leaflet-control-layers-group';
+        if (this.options.groupsCollapsable){
+            groupContainer.className = 'leaflet-control-layers-group group-collapsable collapsed';
+        }else{
+            groupContainer.className = 'leaflet-control-layers-group';
+        }
         groupContainer.id = 'leaflet-control-layers-group-' + obj.group.id;
 
         var groupLabel = document.createElement('label');
@@ -276,6 +283,18 @@ L.Control.GroupedLayers = L.Control.extend({
           }
         }
 
+        if (this.options.groupsCollapsable){
+            var groupMin = document.createElement('span');
+            groupMin.className = 'leaflet-control-layers-group-collapse '+this.options.groupsCollapseClass;
+            groupLabel.appendChild(groupMin);
+            
+            var groupMax = document.createElement('span');
+            groupMax.className = 'leaflet-control-layers-group-expand '+this.options.groupsExpandClass;
+            groupLabel.appendChild(groupMax);
+            
+            L.DomEvent.on(groupLabel, 'click', this._onGroupCollapseToggle, groupLabel);
+        }
+        
         var groupName = document.createElement('span');
         groupName.className = 'leaflet-control-layers-group-name';
         groupName.innerHTML = obj.group.name;
@@ -296,8 +315,19 @@ L.Control.GroupedLayers = L.Control.extend({
 
     return label;
   },
+  
+  _onGroupCollapseToggle: function (event) {
+    event.stopPropagation();
+    var groupElement=this.closest(".leaflet-control-layers-group");
+    if (groupElement.classList.contains("group-collapsable") && groupElement.classList.contains("collapsed")){
+      groupElement.classList.remove("collapsed");
+    }else if (groupElement.classList.contains("group-collapsable") && groupElement.classList.contains("collapsed")==false){
+      groupElement.classList.add("collapsed");
+    }
+  },
 
-  _onGroupInputClick: function () {
+  _onGroupInputClick: function (event) {
+    event.stopPropagation();
     var i, input, obj;
 
     var this_legend = this.legend;
