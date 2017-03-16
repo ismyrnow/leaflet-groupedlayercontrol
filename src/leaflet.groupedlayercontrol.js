@@ -292,7 +292,7 @@ L.Control.GroupedLayers = L.Control.extend({
             groupMax.className = 'leaflet-control-layers-group-expand '+this.options.groupsExpandClass;
             groupLabel.appendChild(groupMax);
             
-            L.DomEvent.on(groupLabel, 'click', this._onGroupCollapseToggle, groupLabel);
+            L.DomEvent.on(groupLabel, 'click', this._onGroupCollapseToggle, groupContainer);
         }
         
         var groupName = document.createElement('span');
@@ -318,11 +318,10 @@ L.Control.GroupedLayers = L.Control.extend({
   
   _onGroupCollapseToggle: function (event) {
     event.stopPropagation();
-    var groupElement=this.closest(".leaflet-control-layers-group");
-    if (groupElement.classList.contains("group-collapsable") && groupElement.classList.contains("collapsed")){
-      groupElement.classList.remove("collapsed");
-    }else if (groupElement.classList.contains("group-collapsable") && groupElement.classList.contains("collapsed")==false){
-      groupElement.classList.add("collapsed");
+    if (this.classList.contains("group-collapsable") && this.classList.contains("collapsed")){
+      this.classList.remove("collapsed");
+    }else if (this.classList.contains("group-collapsable") && this.classList.contains("collapsed")==false){
+      this.classList.add("collapsed");
     }
   },
 
