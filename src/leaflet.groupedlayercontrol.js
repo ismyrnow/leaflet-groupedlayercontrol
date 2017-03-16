@@ -260,11 +260,7 @@ L.Control.GroupedLayers = L.Control.extend({
       // Create the group container if it doesn't exist
       if (!groupContainer) {
         groupContainer = document.createElement('div');
-        if (this.options.groupsCollapsable){
-            groupContainer.className = 'leaflet-control-layers-group group-collapsable collapsed';
-        }else{
-            groupContainer.className = 'leaflet-control-layers-group';
-        }
+        groupContainer.className = 'leaflet-control-layers-group';
         groupContainer.id = 'leaflet-control-layers-group-' + obj.group.id;
 
         var groupLabel = document.createElement('label');
@@ -284,6 +280,9 @@ L.Control.GroupedLayers = L.Control.extend({
         }
 
         if (this.options.groupsCollapsable){
+            groupContainer.classList.add("group-collapsable");
+            groupContainer.classList.add("collapsed");
+            
             var groupMin = document.createElement('span');
             groupMin.className = 'leaflet-control-layers-group-collapse '+this.options.groupsCollapseClass;
             groupLabel.appendChild(groupMin);
@@ -317,16 +316,17 @@ L.Control.GroupedLayers = L.Control.extend({
   },
   
   _onGroupCollapseToggle: function (event) {
-    event.stopPropagation();
+    L.DomEvent.stopPropagation(event);
+    L.DomEvent.preventDefault(event);
     if (this.classList.contains("group-collapsable") && this.classList.contains("collapsed")){
       this.classList.remove("collapsed");
-    }else if (this.classList.contains("group-collapsable") && this.classList.contains("collapsed")==false){
+    }else if (this.classList.contains("group-collapsable") && !this.classList.contains("collapsed")){
       this.classList.add("collapsed");
     }
   },
 
   _onGroupInputClick: function (event) {
-    event.stopPropagation();
+    L.DomEvent.stopPropagation(event);
     var i, input, obj;
 
     var this_legend = this.legend;
