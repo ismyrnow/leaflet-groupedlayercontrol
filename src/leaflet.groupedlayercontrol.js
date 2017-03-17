@@ -69,7 +69,7 @@ L.Control.GroupedLayers = L.Control.extend({
     var id = L.Util.stamp(layer);
     var _layer = this._getLayer(id);
     if (_layer) {
-      delete this.layers[this.layers.indexOf(_layer)];
+      this._layers.splice(this._layers.indexOf(_layer), 1);
     }
     this._update();
     return this;
