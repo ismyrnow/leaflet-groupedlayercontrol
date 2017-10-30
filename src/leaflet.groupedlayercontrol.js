@@ -11,8 +11,8 @@ L.Control.GroupedLayers = L.Control.extend({
     exclusiveGroups: [],
     groupCheckboxes: false,
     groupsCollapsable: false,
-    groupsCollapseClass: "leaflet-control-layers-group-collapse-default",
-    groupsExpandClass: "leaflet-control-layers-group-expand-default",
+    groupsExpandedClass: "leaflet-control-layers-group-collapse-default",
+    groupsCollapsedClass: "leaflet-control-layers-group-expand-default",
   },
 
   initialize: function (baseLayers, groupedOverlays, options) {
@@ -284,11 +284,11 @@ L.Control.GroupedLayers = L.Control.extend({
           groupContainer.classList.add("collapsed");
             
           var groupMin = document.createElement('span');
-          groupMin.className = 'leaflet-control-layers-group-collapse '+this.options.groupsCollapseClass;
+          groupMin.className = 'leaflet-control-layers-group-collapse '+this.options.groupsExpandedClass;
           groupLabel.appendChild(groupMin);
             
           var groupMax = document.createElement('span');
-          groupMax.className = 'leaflet-control-layers-group-expand '+this.options.groupsExpandClass;
+          groupMax.className = 'leaflet-control-layers-group-expand '+this.options.groupsCollapsedClass;
           groupLabel.appendChild(groupMax);
             
           L.DomEvent.on(groupLabel, 'click', this._onGroupCollapseToggle, groupContainer);

@@ -59,6 +59,25 @@ L.control.groupedLayers(baseLayers, groupedOverlays, options).addTo(map);
 
 ![advanced preview](preview-advanced.png)
 
+#### Collapsable Groups
+
+Enabling collapsable groups in the switcher can be done with the following options
+
+```javascript
+var options = {
+  // enable basic collapsability
+  groupsCollapsable: true,
+  // (Optional) The css class(es) used to indicated the group is expanded
+  groupsExpandedClass: "glyphicon glyphicon-chevron-down", 
+  // (Optional) The css class(es) used to indicated the group is collapsed
+  groupsCollapsedClass: "glyphicon glyphicon-chevron-right"
+};
+
+L.control.groupedLayers(baseLayers, groupedOverlays, options).addTo(map);
+```
+
+![collapsable preview](preview-collapsable.png)
+
 ### Adding a layer
 
 Adding a layer individually works similarly to the default layer control,
