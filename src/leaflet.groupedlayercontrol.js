@@ -46,8 +46,8 @@ L.Control.GroupedLayers = L.Control.extend({
 
   onRemove: function (map) {
     map
-        .off('layeradd', this._onLayerChange)
-        .off('layerremove', this._onLayerChange);
+        .off('layeradd', this._onLayerChange, this)
+        .off('layerremove', this._onLayerChange, this);
   },
 
   addBaseLayer: function (layer, name) {
