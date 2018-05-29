@@ -87,12 +87,9 @@ L.Control.GroupedLayers = L.Control.extend({
     // Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
     container.setAttribute('aria-haspopup', true);
 
-    if (L.Browser.touch) {
-      L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
-    } else {
-      L.DomEvent.disableClickPropagation(container);
-      L.DomEvent.on(container, 'wheel', L.DomEvent.stopPropagation);
-    }
+    // Block click/scroll events so that map doesn't zoom when interacting with the layer control
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.disableScrollPropagation(container);
 
     var form = this._form = L.DomUtil.create('form', className + '-list');
 
