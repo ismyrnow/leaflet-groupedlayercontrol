@@ -178,6 +178,10 @@ L.Control.GroupedLayers = L.Control.extend({
       baseLayersPresent = baseLayersPresent || !obj.overlay;
     }
 
+    if (this.options.groupCheckboxes) {
+      this._refreshGroupsCheckStates();
+    }
+
     this._separator.style.display = overlaysPresent && baseLayersPresent ? '' : 'none';
   },
 
