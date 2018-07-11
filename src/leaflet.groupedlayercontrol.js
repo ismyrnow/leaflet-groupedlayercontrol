@@ -351,7 +351,7 @@ L.Control.GroupedLayers = L.Control.extend({
 
   _refreshGroupsCheckStates: function () {
     for (var i = 0; i < this._domGroups.length; i++) {
-      let groupContainer = this._domGroups[i];
+      var groupContainer = this._domGroups[i];
       if (groupContainer) {
 
         var groupInput = groupContainer.getElementsByClassName('leaflet-control-layers-group-selector')[0];
