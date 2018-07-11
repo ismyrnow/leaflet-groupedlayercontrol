@@ -44,6 +44,12 @@ L.Control.GroupedLayers = L.Control.extend({
     return this._container;
   },
 
+  addTo: function (map) {
+		L.Control.prototype.addTo.call(this, map);
+		// Trigger expand after Layers Control has been inserted into DOM so that is now has an actual height.
+		return this._expandIfNotCollapsed();
+	},
+
   onRemove: function (map) {
     map
         .off('layeradd', this._onLayerChange, this)
@@ -66,7 +72,7 @@ L.Control.GroupedLayers = L.Control.extend({
     var id = L.Util.stamp(layer);
     var _layer = this._getLayer(id);
     if (_layer) {
-      delete this._layers[this._layers.indexOf(_layer)];
+      this._layers.splice(this._layers.indexOf(_layer), 1);
     }
     this._update();
     return this;
@@ -82,41 +88,40 @@ L.Control.GroupedLayers = L.Control.extend({
 
   _initLayout: function () {
     var className = 'leaflet-control-layers',
-      container = this._container = L.DomUtil.create('div', className);
+      container = this._container = L.DomUtil.create('div', className),
+      collapsed = this.options.collapsed;
 
     // Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
     container.setAttribute('aria-haspopup', true);
 
-    if (L.Browser.touch) {
-      L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
-    } else {
-      L.DomEvent.disableClickPropagation(container);
-      L.DomEvent.on(container, 'wheel', L.DomEvent.stopPropagation);
-    }
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.disableScrollPropagation(container);
 
     var form = this._form = L.DomUtil.create('form', className + '-list');
 
-    if (this.options.collapsed) {
-      if (!L.Browser.android) {
-        L.DomEvent
-            .on(container, 'mouseover', this._expand, this)
-            .on(container, 'mouseout', this._collapse, this);
-      }
-      var link = this._layersLink = L.DomUtil.create('a', className + '-toggle', container);
-      link.href = '#';
-      link.title = 'Layers';
-
-      if (L.Browser.touch) {
-        L.DomEvent
-            .on(link, 'click', L.DomEvent.stop)
-            .on(link, 'click', this._expand, this);
-      } else {
-        L.DomEvent.on(link, 'focus', this._expand, this);
-      }
-
+    if (collapsed) {
       this._map.on('click', this._collapse, this);
-      // TODO keyboard accessibility
+
+      if (!L.Browser.android) {
+        L.DomEvent.on(container, {
+          mouseenter: this._expand,
+          mouseleave: this._collapse
+        }, this);
+      }
+    }
+
+    var link = this._layersLink = L.DomUtil.create('a', className + '-toggle', container);
+    link.href = '#';
+    link.title = 'Layers';
+
+    if (L.Browser.touch) {
+      L.DomEvent.on(link, 'click', L.DomEvent.stop);
+      L.DomEvent.on(link, 'click', this._expand, this);
     } else {
+      L.DomEvent.on(link, 'focus', this._expand, this);
+    }
+
+    if (!collapsed) {
       this._expand();
     }
 
@@ -156,6 +161,8 @@ L.Control.GroupedLayers = L.Control.extend({
       this._lastZIndex++;
       layer.setZIndex(this._lastZIndex);
     }
+
+    this._expandIfNotCollapsed();
   },
 
   _update: function () {
@@ -347,12 +354,23 @@ L.Control.GroupedLayers = L.Control.extend({
 
   _expand: function () {
     L.DomUtil.addClass(this._container, 'leaflet-control-layers-expanded');
-    // permits to have a scrollbar if overlays heighter than the map.
-    var acceptableHeight = this._map._size.y - (this._container.offsetTop * 4);
+    this._form.style.height = null;
+    var acceptableHeight = this._map.getSize().y - (this._container.offsetTop + 50);
     if (acceptableHeight < this._form.clientHeight) {
       L.DomUtil.addClass(this._form, 'leaflet-control-layers-scrollbar');
       this._form.style.height = acceptableHeight + 'px';
+    } else {
+      L.DomUtil.removeClass(this._form, 'leaflet-control-layers-scrollbar');
     }
+    // this._checkDisabledLayers();
+    return this;
+  },
+
+  _expandIfNotCollapsed: function () {
+    if (this._map && !this.options.collapsed) {
+      this._expand();
+    }
+    return this;
   },
 
   _collapse: function () {
