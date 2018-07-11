@@ -178,6 +178,10 @@ L.Control.GroupedLayers = L.Control.extend({
       baseLayersPresent = baseLayersPresent || !obj.overlay;
     }
 
+    if (this.options.groupCheckboxes) {
+      this._refreshGroupsCheckStates();
+    }
+
     this._separator.style.display = overlaysPresent && baseLayersPresent ? '' : 'none';
   },
 
@@ -342,7 +346,34 @@ L.Control.GroupedLayers = L.Control.extend({
       }
     }
 
+    if (this.options.groupCheckboxes) {
+      this._refreshGroupsCheckStates();
+    }
+
     this._handlingClick = false;
+  },
+
+  _refreshGroupsCheckStates: function () {
+    for (var i = 0; i < this._domGroups.length; i++) {
+      var groupContainer = this._domGroups[i];
+      if (groupContainer) {
+
+        var groupInput = groupContainer.getElementsByClassName('leaflet-control-layers-group-selector')[0];
+        var groupItemInputs = groupContainer.querySelectorAll('input.leaflet-control-layers-selector');
+        var checkedGroupItemInputs = groupContainer.querySelectorAll('input.leaflet-control-layers-selector:checked');
+
+        if (groupInput) {
+          groupInput.indeterminate = false;
+          if (checkedGroupItemInputs.length === groupItemInputs.length) {
+            groupInput.checked = true;
+          } else if (checkedGroupItemInputs.length === 0) {
+            groupInput.checked = false;
+          } else {
+            groupInput.indeterminate = true;
+          }
+        }
+      }
+    }
   },
 
   _expand: function () {
