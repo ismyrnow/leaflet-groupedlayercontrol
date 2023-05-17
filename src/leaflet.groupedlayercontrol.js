@@ -16,7 +16,7 @@ L.Control.GroupedLayers = L.Control.extend({
     groupsCollapsable: false,
     groupsExpandedClass: "leaflet-control-layers-group-collapse-default",
     groupsCollapsedClass: "leaflet-control-layers-group-expand-default",
-    sortFunction: function (nameA, nameB, nameAA, nameBB) {
+    sortFunction: function (nameA, nameB) {
       if (nameA < nameB) {
         return -1;
       } else if (nameB < nameA) {
