@@ -7,6 +7,7 @@ L.Control.GroupedLayers = L.Control.extend({
   options: {
     sortLayers: true,
     sortGroups: true,
+    sortBaseLayers: false,
     collapsed: true,
     position: 'topright',
     autoZIndex: true,
@@ -177,13 +178,19 @@ L.Control.GroupedLayers = L.Control.extend({
 
     if (this.options.sortLayers) {
       this._layers.sort(L.bind(function (a, b) {
-        return this.options.sortFunction(a.name, b.name);
+        if (this.options.sortBaseLayers) {
+          return this.options.sortFunction(a.name, b.name);
+        } else {
+          if (a.overlay == true && b.overlay == true) {
+            return this.options.sortFunction(a.name, b.name);
+          }
+        }
       }, this));
     }
 
     if (this.options.sortGroups) {
       this._layers.sort(L.bind(function (a, b) {
-        return this.options.sortFunction(a.group.name, b.group.name);
+          return this.options.sortFunction(a.group.name, b.group.name);
       }, this));
     }
 
