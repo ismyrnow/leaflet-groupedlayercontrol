@@ -73,9 +73,9 @@ L.Control.GroupedLayers = L.Control.extend({
   },
 
   _getLayer: function (id) {
-    for (var i = 0; i < this._layers.length; i++) {
-      if (this._layers[i] && L.stamp(this._layers[i].layer) === id) {
-        return this._layers[i];
+    for (var layer of this._layers) {
+      if (layer && L.stamp(layer.layer) === id) {
+        return layer;
       }
     }
   },
@@ -84,15 +84,8 @@ L.Control.GroupedLayers = L.Control.extend({
     var className = 'leaflet-control-layers',
       container = this._container = L.DomUtil.create('div', className);
 
-    // Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
-    container.setAttribute('aria-haspopup', true);
-
-    if (L.Browser.touch) {
-      L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation);
-    } else {
-      L.DomEvent.disableClickPropagation(container);
-      L.DomEvent.on(container, 'wheel', L.DomEvent.stopPropagation);
-    }
+    L.DomEvent.disableClickPropagation(container);
+    L.DomEvent.disableScrollPropagation(container);
 
     var form = this._form = L.DomUtil.create('form', className + '-list');
 
@@ -106,13 +99,7 @@ L.Control.GroupedLayers = L.Control.extend({
       link.href = '#';
       link.title = 'Layers';
 
-      if (L.Browser.touch) {
-        L.DomEvent
-            .on(link, 'click', L.DomEvent.stop)
-            .on(link, 'click', this._expand, this);
-      } else {
-        L.DomEvent.on(link, 'focus', this._expand, this);
-      }
+      L.DomEvent.on(link, 'focus', this._expand, this);
 
       this._map.on('click', this._collapse, this);
       // TODO keyboard accessibility
@@ -128,7 +115,6 @@ L.Control.GroupedLayers = L.Control.extend({
   },
 
   _addLayer: function (layer, name, group, overlay) {
-    var id = L.Util.stamp(layer);
 
     var _layer = {
       layer: layer,
@@ -168,11 +154,9 @@ L.Control.GroupedLayers = L.Control.extend({
     this._domGroups.length = 0;
 
     var baseLayersPresent = false,
-      overlaysPresent = false,
-      i, obj;
+      overlaysPresent = false;
 
-    for (var i = 0; i < this._layers.length; i++) {
-      obj = this._layers[i];
+    for (var obj of this._layers) {
       this._addItem(obj);
       overlaysPresent = overlaysPresent || obj.overlay;
       baseLayersPresent = baseLayersPresent || !obj.overlay;
@@ -204,18 +188,14 @@ L.Control.GroupedLayers = L.Control.extend({
     }
   },
 
-  // IE7 bugs out if you create a radio dynamically, so you have to do it this hacky way (see http://bit.ly/PqYLBe)
   _createRadioElement: function (name, checked) {
-    var radioHtml = '<input type="radio" class="leaflet-control-layers-selector" name="' + name + '"';
-    if (checked) {
-      radioHtml += ' checked="checked"';
-    }
-    radioHtml += '/>';
+    var radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = name;
+    radio.className = 'leaflet-control-layers-selector';
+    radio.checked = checked;
 
-    var radioFragment = document.createElement('div');
-    radioFragment.innerHTML = radioHtml;
-
-    return radioFragment.firstChild;
+    return radio;
   },
 
   _addItem: function (obj) {
@@ -298,16 +278,14 @@ L.Control.GroupedLayers = L.Control.extend({
   },
 
   _onGroupInputClick: function () {
-    var i, input, obj;
+    var obj;
 
     var this_legend = this.legend;
     this_legend._handlingClick = true;
 
     var inputs = this_legend._form.getElementsByTagName('input');
-    var inputsLen = inputs.length;
 
-    for (i = 0; i < inputsLen; i++) {
-      input = inputs[i];
+    for (var input of inputs) {
       if (input.groupID === this.groupID && input.className === 'leaflet-control-layers-selector') {
         input.checked = this.checked;
         obj = this_legend._getLayer(input.layerId);
@@ -323,23 +301,27 @@ L.Control.GroupedLayers = L.Control.extend({
   },
 
   _onInputClick: function () {
-    var i, input, obj,
-      inputs = this._form.getElementsByTagName('input'),
-      inputsLen = inputs.length;
+    var obj,
+    inputs = this._form.getElementsByClassName('leaflet-control-layers-selector'),
+    toBeRemoved,
+    toBeAdded;
 
     this._handlingClick = true;
 
-    for (i = 0; i < inputsLen; i++) {
-      input = inputs[i];
-      if (input.className === 'leaflet-control-layers-selector') {
-        obj = this._getLayer(input.layerId);
-
-        if (input.checked && !this._map.hasLayer(obj.layer)) {
-          this._map.addLayer(obj.layer);
-        } else if (!input.checked && this._map.hasLayer(obj.layer)) {
-          this._map.removeLayer(obj.layer);
-        }
+    for (var input of inputs) {
+      obj = this._getLayer(input.layerId);
+      if (input.checked && !this._map.hasLayer(obj.layer)) {
+        toBeAdded = obj.layer;
+      } else if (!input.checked && this._map.hasLayer(obj.layer)) {
+        toBeRemoved = obj.layer;
       }
+    }
+
+    if (toBeRemoved !== undefined) {
+      this._map.removeLayer(toBeRemoved);
+    }
+    if (toBeAdded !== undefined) {
+      this._map.addLayer(toBeAdded);
     }
 
     this._handlingClick = false;
