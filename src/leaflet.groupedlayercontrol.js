@@ -178,12 +178,16 @@ L.Control.GroupedLayers = L.Control.extend({
 
     if (this.options.sortLayers) {
       this._layers.sort(L.bind(function (a, b) {
-        if (this.options.sortBaseLayers) {
+        if (a.overlay == true && b.overlay == true) {
           return this.options.sortFunction(a.name, b.name);
-        } else {
-          if (a.overlay == true && b.overlay == true) {
-            return this.options.sortFunction(a.name, b.name);
-          }
+        }
+      }, this));
+    }
+
+    if (this.options.sortBaseLayers) {
+      this._layers.sort(L.bind(function (a, b) {
+        if (a.overlay == undefined && b.overlay == undefined) {
+          return this.options.sortFunction(a.name, b.name);
         }
       }, this));
     }
