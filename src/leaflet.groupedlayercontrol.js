@@ -5,6 +5,8 @@
 L.Control.GroupedLayers = L.Control.extend({
 
   options: {
+    sortLayers: true,
+    sortGroups: true,
     collapsed: true,
     position: 'topright',
     autoZIndex: true,
@@ -13,6 +15,15 @@ L.Control.GroupedLayers = L.Control.extend({
     groupsCollapsable: false,
     groupsExpandedClass: "leaflet-control-layers-group-collapse-default",
     groupsCollapsedClass: "leaflet-control-layers-group-expand-default",
+    sortFunction: function (nameA, nameB, nameAA, nameBB) {
+      if (nameA < nameB) {
+        return -1;
+      } else if (nameB < nameA) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
   },
 
   initialize: function (baseLayers, groupedOverlays, options) {
@@ -162,6 +173,18 @@ L.Control.GroupedLayers = L.Control.extend({
     if (this.options.autoZIndex && layer.setZIndex) {
       this._lastZIndex++;
       layer.setZIndex(this._lastZIndex);
+    }
+
+    if (this.options.sortLayers) {
+      this._layers.sort(L.bind(function (a, b) {
+        return this.options.sortFunction(a.name, b.name);
+      }, this));
+    }
+
+    if (this.options.sortGroups) {
+      this._layers.sort(L.bind(function (a, b) {
+        return this.options.sortFunction(a.group.name, b.group.name);
+      }, this));
     }
 
     this._expandIfNotCollapsed();
