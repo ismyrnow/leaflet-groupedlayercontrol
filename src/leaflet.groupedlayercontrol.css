@@ -1,14 +1,38 @@
 .leaflet-control-layers-group-name {
-  font-weight: bold;
-  margin-bottom: .2em;
+  font-weight: 700;
+  margin-bottom: 0.2em;
   margin-left: 3px;
 }
-
 .leaflet-control-layers-group {
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
-
 .leaflet-control-layers-scrollbar {
   overflow-y: scroll;
   padding-right: 10px;
+}
+.leaflet-control-layers-group-label {
+  margin-bottom: 2px;
+}
+.leaflet-control-layers-group-selector, .leaflet-control-layers-selector {
+  vertical-align: top;
+}
+.leaflet-control-layers-group label:not(.leaflet-control-layers-group-label) {
+  text-indent: 15px;
+}
+.leaflet-control-layers-group.group-collapsable.collapsed .leaflet-control-layers-group-collapse,
+.leaflet-control-layers-group.group-collapsable:not(.collapsed) .leaflet-control-layers-group-expand,
+.leaflet-control-layers-group.group-collapsable.collapsed label:not(.leaflet-control-layers-group-label){
+display: none;
+}
+.leaflet-control-layers-group-expand-default:before{
+content: "+"; 
+width: 12px; 
+display: inline-block; 
+text-align: center;
+}
+.leaflet-control-layers-group-collapse-default:before{
+content: "-"; 
+width: 12px; 
+display: inline-block; 
+text-align: center;
 }
