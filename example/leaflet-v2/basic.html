@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Basic Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="../../dist/leaflet.groupedlayercontrol.min.css" />
+  </head>
+  <body>
+    <div id="map" style="width: 600px; height: 400px"></div>
+    <script type="importmap">
+      {
+        "imports": {
+          "leaflet": "https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.js"
+        }
+      }
+    </script>
+    <script type="module">
+      import { Map, TileLayer, LayerGroup, Marker } from "leaflet";
+      import { GroupedLayers } from "../../dist/leaflet.groupedlayercontrol.min.js";
+
+      const map = new Map("map").setView([39.73, -104.99], 10);
+
+      const basemaps = {
+        OpenStreetMap: new TileLayer(
+          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+          {
+            maxZoom: 19,
+            attribution:
+              '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          },
+        ),
+        "OpenStreetMap.HOT": new TileLayer(
+          "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+          {
+            maxZoom: 19,
+            attribution:
+              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>',
+          },
+        ),
+      };
+
+      basemaps.OpenStreetMap.addTo(map);
+
+      const cities = new LayerGroup();
+      const restaurants = new LayerGroup();
+      const dogs = new LayerGroup();
+      const cats = new LayerGroup();
+
+      new Marker([39.61, -105.02]).bindPopup("Littleton, CO.").addTo(cities);
+      new Marker([39.74, -104.99]).bindPopup("Denver, CO.").addTo(cities);
+      new Marker([39.73, -104.8]).bindPopup("Aurora, CO.").addTo(cities);
+      new Marker([39.77, -105.23]).bindPopup("Golden, CO.").addTo(cities);
+
+      new Marker([39.69, -104.85]).bindPopup("A restaurant").addTo(restaurants);
+      new Marker([39.69, -105.12]).bindPopup("A restaurant").addTo(restaurants);
+
+      new Marker([39.79, -104.95]).bindPopup("A dog").addTo(dogs);
+      new Marker([39.79, -105.22]).bindPopup("A dog").addTo(dogs);
+
+      new Marker([39.59, -104.75]).bindPopup("A cat").addTo(cats);
+      new Marker([39.59, -105.02]).bindPopup("A cat").addTo(cats);
+
+      // Overlay layers are grouped
+      const groupedOverlays = {
+        Landmarks: {
+          Cities: cities,
+          Restaurants: restaurants,
+        },
+        Random: {
+          Dogs: dogs,
+          Cats: cats,
+        },
+      };
+
+      cities.addTo(map);
+
+      // Use the custom grouped layer control
+      new GroupedLayers(basemaps, groupedOverlays).addTo(map);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Basic Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-groupedlayercontrol@0.6.1/dist/leaflet.groupedlayercontrol.min.css" />
+  </head>
+  <body>
+    <div id="map" style="width: 600px; height: 400px"></div>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="https://unpkg.com/leaflet-groupedlayercontrol@0.6.1/dist/leaflet.groupedlayercontrol.min.js"></script>
+    <script src="exampledata.js"></script>
+    <script>
+      var map = L.map("map", {
+        center: [39.73, -104.99],
+        zoom: 10,
+        layers: [
+          ExampleData.Basemaps.OpenStreetMap,
+          ExampleData.LayerGroups.cities,
+        ],
+      });
+
+      // Overlay layers are grouped
+      var groupedOverlays = {
+        Landmarks: {
+          Cities: ExampleData.LayerGroups.cities,
+          Restaurants: ExampleData.LayerGroups.restaurants,
+        },
+        Random: {
+          Dogs: ExampleData.LayerGroups.dogs,
+          Cats: ExampleData.LayerGroups.cats,
+        },
+      };
+
+      // Use the custom grouped layer control, not "L.control.layers"
+      L.control.groupedLayers(ExampleData.Basemaps, groupedOverlays).addTo(map);
+    </script>
+  </body>
+</html>
