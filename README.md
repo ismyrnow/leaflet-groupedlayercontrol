@@ -33,13 +33,13 @@ import 'leaflet-groupedlayercontrol/dist/leaflet.groupedlayercontrol.min.css';
 Include the CSS in your HTML `<head>`:
 
 ```html
-<link rel="stylesheet" href="path/to/leaflet.groupedlayercontrol.min.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-groupedlayercontrol@2.0.0-alpha.1/dist/leaflet.groupedlayercontrol.min.css" />
 ```
 
 Then import the JavaScript module:
 
 ```javascript
-import { GroupedLayers } from './path/to/leaflet.groupedlayercontrol.min.js';
+import { GroupedLayers } from 'https://unpkg.com/leaflet-groupedlayercontrol@2.0.0-alpha.1/dist/leaflet.groupedlayercontrol.min.js';
 ```
 
 ## Usage
